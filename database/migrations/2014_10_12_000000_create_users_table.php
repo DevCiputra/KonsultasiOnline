@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('provinsi')->nullable();
             $table->text('avatar')->nullable();
             $table->string('role')->nullable();
+            $table->text('fcm')->nullable();
             $table->enum('status_aktif', ['online', 'offline'])->default('offline');
             $table->rememberToken();
             $table->timestamps();

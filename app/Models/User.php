@@ -27,7 +27,8 @@ class User extends Authenticatable
         'provinsi',
         'avatar',
         'role',
-        'status_aktif'
+        'status_aktif',
+        'fcm'
 
     ];
 

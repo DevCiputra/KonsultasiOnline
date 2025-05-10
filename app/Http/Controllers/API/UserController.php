@@ -27,7 +27,8 @@ class UserController extends Controller
                 'provinsi' => 'sometimes|string|max:50',
                 'role' => 'sometimes|string|max:10',
                 'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'status_aktif' => 'sometimes'
+                'status_aktif' => 'sometimes',
+                'fcm' => 'sometimes|nullable'
             ]);
 
             if ($validator->fails()) {
@@ -44,7 +45,8 @@ class UserController extends Controller
                 'provinsi' => $request->provinsi,
                 'role' => $request->role,
                 'avatar' => $request->avatar,
-                'status_aktif'=> $request->status_aktif
+                'status_aktif'=> $request->status_aktif,
+                'fcm' => $request->fcm
             ]);
 
             // // generate OTP
