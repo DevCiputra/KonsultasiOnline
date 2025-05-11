@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CategoryProductController;
 use App\Http\Controllers\API\DoctorProfileController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\ReservationController;
@@ -49,6 +50,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('v1/checkout', [TransactionController::class, 'checkout']);
     Route::post('v1/callbackTransaction/{id}', [TransactionController::class, 'CallBackTransaction']);
     Route::get('v1/transactionHistory', [TransactionController::class, 'transactionHistory']);
+
+    // Category Product
+    Route::get('v1/category', [CategoryProductController::class, 'category']);
 
 });
 
