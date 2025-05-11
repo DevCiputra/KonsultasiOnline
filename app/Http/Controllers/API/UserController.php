@@ -4,12 +4,15 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormmater;
 use App\Http\Controllers\Controller;
+use App\Mail\OtpMail;
+use App\Models\EmailVerification;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -80,63 +83,88 @@ class UserController extends Controller
     }
 
 
-    // public function loginOtp(Request $request)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'email'    => 'required|email',
-    //             'password' => 'required',
-    //             'otp'      => 'required'
-    //         ]);
+    public function resetPasswordWithOtp(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'otp' => 'required',
+            ]);
 
-    //         // Step 1: Verify OTP
-    //         $verification = EmailVerification::where('email', $request->email)
-    //                         ->where('otp', $request->otp)
-    //                         ->first();
+            // Step 1: Verify the OTP
+            $verification = EmailVerification::where('email', $request->email)
+                            ->where('otp', $request->otp)
+                            ->first();
 
-    //         if (!$verification) {
-    //             return ResponseFormmater::error(null, 'Kode OTP salah atau email tidak ditemukan', 400);
-    //         }
+            if (!$verification) {
+                return ResponseFormmater::error(null, 'Kode OTP salah atau email tidak ditemukan', 400);
+            }
 
-    //         // Step 2: Check credentials
-    //         $credentials = request(['email', 'password']);
+            // Check if OTP has expired (optional - add expiry time check if needed)
+            if (now()->diffInMinutes($verification->created_at) > 10) {
+                return ResponseFormmater::error(null, 'Kode OTP sudah kedaluwarsa', 400);
+            }
 
-    //         if (!Auth::attempt($credentials)) {
-    //             return ResponseFormmater::error([
-    //                 'message' => 'Unauthorized'
-    //             ], 'Unauthorized Failed', 404);
-    //         }
+            // Step 2: Find user with the email
+            $user = User::where('email', $request->email)->first();
 
-    //         $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return ResponseFormmater::error(null, 'User tidak ditemukan', 404);
+            }
 
-    //         // Step 3: Check if password is correct
-    //         if (!Hash::check($request->password, $user->password, [])) {
-    //             throw new Exception('Password salah');
-    //         }
 
-    //         // Step 4: Mark email as verified
-    //         $user->email_verified_at = now();
-    //         $user->save();
+            // Step 4: Delete the OTP after successful password reset
+            $verification->delete();
 
-    //         // Step 5: Delete OTP after verification
-    //         $verification->delete();
+            return ResponseFormmater::success([
+                'message' => 'Silahkan melanjutkan Reset Password',
+            ], 'OTP VALID');
 
-    //         // Step 6: Generate token
-    //         $tokenResult = $user->createToken('authToken')->plainTextToken;
+        } catch (Exception $error) {
+            return ResponseFormmater::error([
+                'message' => 'OTP TIDAK VALID',
+                'error' => $error->getMessage()
+            ], 'OTP TIDAK VALID', 500);
+        }
+    }
 
-    //         return ResponseFormmater::success([
-    //             'access_token' => $tokenResult,
-    //             'token_type'   => 'Bearer',
-    //             'user'         => $user,
-    //         ], 'Verifikasi OTP dan Login Berhasil');
+    public function requestPasswordResetOtp(Request $request)
+    {
+        try {
+            $request->validate([
+                'email' => 'required|email|exists:users,email',
+            ]);
 
-    //     } catch (Exception $error) {
-    //         return ResponseFormmater::error([
-    //             'message' => 'Verifikasi OTP dan Login Gagal',
-    //             'error'   => $error->getMessage()
-    //         ], 'Verifikasi OTP dan Login Gagal', 500);
-    //     }
-    // }
+            $email = $request->email;
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                return ResponseFormmater::error(null, 'Email tidak terdaftar', 404);
+            }
+
+            // Generate OTP (6 digit random number)
+            $otp = random_int(100000, 999999);
+
+            // Save OTP to database (replace any existing OTP)
+            EmailVerification::updateOrCreate(
+                ['email' => $email],
+                ['otp' => $otp, 'created_at' => now()]
+            );
+
+            // Send OTP email
+            Mail::to($email)->send(new OtpMail($otp));
+
+            return ResponseFormmater::success([
+                'message' => 'Kode OTP telah dikirim ke email Anda',
+            ], 'Permintaan Reset Password Berhasil');
+
+        } catch (Exception $error) {
+            return ResponseFormmater::error([
+                'message' => 'Permintaan Reset Password Gagal',
+                'error' => $error->getMessage()
+            ], 'Permintaan Reset Password Gagal', 500);
+        }
+    }
 
 
     public function Login (Request $request)
