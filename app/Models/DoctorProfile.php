@@ -19,14 +19,12 @@ class DoctorProfile extends Model
         'category_polyclinic_id',
         'user_id',
         'spesialis_name',
-        'latar_pendidikan',
-        'no_lisensi',
-        'pengalaman',
+        'no_str',
         'biografi',
         'link_accuity',
-        'jadwal_praktek',
         'cv_dokter',
         'payment_konsultasi',
+        'payment_strike'
     ];
 
     public function category_polyclinics()
@@ -37,6 +35,31 @@ class DoctorProfile extends Model
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function ulasans()
+    {
+        return $this->hasMany(Ulasan::class, 'dokter_profile_id', 'id');
+    }
+
+    public function jadwals()
+    {
+        return $this->hasMany(JadwalPraktek::class , 'dokter_profile_id', 'id');
+    }
+
+    public function pendidikans()
+    {
+        return $this->hasMany(RiwayatPendidikan::class, 'dokter_profile_id', 'id');
+    }
+
+    public function pengalamans()
+    {
+        return $this->hasMany(PengalamanPraktek::class, 'dokter_profile_id', 'id');
+    }
+
+    public function medis()
+    {
+        return $this->hasMany(TindakanMedis::class, 'dokter_profile_id', 'id');
     }
 
 

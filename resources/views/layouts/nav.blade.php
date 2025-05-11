@@ -23,6 +23,33 @@
         </ul>
 
         <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="{{route('role.index')}}" class="nav-link">
+              <i class="fas fa-user-cog nav-icon"></i>
+              <p>Role</p>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-user-injured nav-icon"></i>
+              <p>Pasien</p>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-treeview">
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-user-md nav-icon"></i>
+              <p>Dokter</p>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="{{route('category.index')}}" class="nav-link">
                 <i class="fas fa-sitemap nav-icon"></i>
@@ -40,14 +67,24 @@
             </li>
         </ul>
 
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="fas fa-list nav-icon"></i>
-                <p>Product</p>
-              </a>
-            </li>
-        </ul>
+        <li class="nav-item menu-open">
+        <a href="#" class="nav-link active">
+          <i class="fas fa-money-bill-wave"></i>
+          <p>
+            Transaksi
+          </p>
+        </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-history nav-icon"></i>
+                    <p>Konsultasi Online</p>
+                </a>
+                </li>
+            </ul>
+        </li>
+
+
 
         <ul class="nav nav-treeview">
             <li class="nav-item">

@@ -20,8 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('whatsaap')->nullable();
-            $table->string('kota')->nullable();
-            $table->string('provinsi')->nullable();
+            $table->text('address')->nullable();
             $table->text('avatar')->nullable();
             $table->string('role')->nullable();
             $table->text('fcm')->nullable();

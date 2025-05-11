@@ -1,6 +1,6 @@
 @extends('layouts.bootstrap')
 @section('title')
-Kategori
+Role User
 @endsection
 
 @section('content')
@@ -8,17 +8,17 @@ Kategori
     <div class="col-12">
       <div class="card card-primary">
         <div class="card-header">
-            <h3>Data Kategori</h3>
+            <h3>Data Role User</h3>
         </div>
         <div class="card-body table-responsive">
             @include('alert.success')
             @include('alert.failed')
             <br>
 
-            <form method="GET" action="{{route('category.index')}}">
+            <form method="GET" action="{{route('role.index')}}">
                 <div class="row">
                     <div class="col-2">
-                        <b>Search Nama Kategori</b>
+                        <b>Search Nama Role</b>
                     </div>
                     <div class="col-3 mb-3">
                         <input type="text" name="keyword" id="keyword" class="form-control" value="{{Request::get('keyword')}}">
@@ -31,26 +31,24 @@ Kategori
                 </div>
             </form>
             <br>
-            <a href="{{route('category.create')}}" class="btn btn-success">+ Tambah Kategori</a>
+            <a href="{{route('role.create')}}" class="btn btn-success">+ Tambah Role</a>
             <hr>
             <table class="table table-bordered">
             <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama Kategori</th>
-                        <th>Photo Kategori</th>
+                        <th>Nama Role</th>
                         <th>Action</th>
                     </tr>
             </thead>
                 <tbody>
-                    @foreach ($category as $row )
+                    @foreach ($role as $row )
                     <tr>
-                        <td>{{ $loop->iteration + ($category->perPage() * ($category->currentPage() - 1) ) }}</td>
-                        <td>{{$row->name_category}}</td>
-                        <td><img src="{{$row->image_category}}" alt="photo" width="40px;" height="40px;"></td>
+                        <td>{{ $loop->iteration + ($role->perPage() * ($role->currentPage() - 1) ) }}</td>
+                        <td>{{$row->role_user}}</td>
                         <td>
-                            <a href="{{ route ('category.edit', [$row->id])}}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('category.destroy', [$row->id]) }}" class="d-inline" method="POST" onsubmit="return confirm('Delete This Item ?')">
+                            <a href="{{ route ('role.edit', [$row->id])}}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('role.destroy', [$row->id]) }}" class="d-inline" method="POST" onsubmit="return confirm('Delete This Item ?')">
                                 @csrf
                                 {{method_field('DELETE')}}
                                 <input type="submit" class="btn btn-danger btn-sm" value="Delete">
@@ -62,7 +60,7 @@ Kategori
             </table>
         </div>
         <div class="card-footer">
-            {{$category->links()}}
+            {{$role->links()}}
         </div>
       </div>
     </div>

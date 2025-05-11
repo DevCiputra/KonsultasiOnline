@@ -94,13 +94,12 @@ class DoctorProfileController extends Controller
             'category_polyclinic_id' => 'required|exists:category_polyclinics,id',
             'user_id' => 'required|exists:users,id',
             'spesialis_name' => 'required|string',
-            'latar_pendidikan' => 'required|string',
-            'pengalaman' => 'sometimes|string',
+            'no_str' => 'sometimes|string',
             'biografi' => 'sometimes|string',
             'link_accuity' => 'sometimes|string',
-            'jadwal_praktek' => 'required|string',
             'cv_dokter' => 'sometimes|file|mimes:pdf|max:2048',
-            'payment_konsultasi' => 'required|integer'
+            'payment_konsultasi' => 'required|integer',
+            'payment_strike' => 'sometimes|integer',
         ]);
 
 
@@ -137,13 +136,12 @@ class DoctorProfileController extends Controller
             'category_polyclinic_id' => $request->category_polyclinic_id,
             'user_id' => $request->user_id,
             'spesialis_name' => $request->spesialis_name,
-            'latar_pendidikan' => $request->latar_pendidikan,
-            'pengalaman' => $request->pengalaman,
+            'no_str' => $request->no_str,
             'biografi' => $request->biografi,
             'link_accuity' => $request->link_accuity,
-            'jadwal_praktek' => $request->jadwal_praktek,
             'cv_dokter' => $cvDokterUpload,
             'payment_konsultasi' => $request->payment_konsultasi,
+            'payment_strike' => $request->payment_strike,
         ]);
 
 

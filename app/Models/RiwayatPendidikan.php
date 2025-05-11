@@ -6,10 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class RiwayatPendidikan extends Model
 {
     use HasFactory;
-
 
     /**
      * The attributes that are mass assignable.
@@ -17,17 +16,13 @@ class Profile extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
-        'gender',
-        'golongan_darah',
-        'riwayat_medis',
-        'alergi'
+        'dokter_profile_id',
+        'nama_riwayat_pendidikan',
     ];
 
-
-    public function users()
+    public function profileDokters()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(DoctorProfile::class, 'dokter_profile_id', 'id');
     }
 
     public function getCreatedAtAttribute($value)

@@ -11,6 +11,8 @@ Kategori
             <h3>Data Kategori Polyclinic</h3>
         </div>
         <div class="card-body table-responsive">
+            @include('alert.success')
+            @include('alert.failed')
             <br>
 
             <form method="GET" action="{{route('category.index')}}">

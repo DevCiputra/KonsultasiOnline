@@ -21,7 +21,6 @@ class Reservation extends Model
         // INI PROFILE ID DOKTER
         'dokter_profile_id',
         'tanggal_konsultasi',
-        'waktu_konsultasi',
         'link_pertemuan',
         'catatan_konsultasi',
         'keluhan_utama',

@@ -20,7 +20,6 @@ class CreateReservationsTable extends Migration
             // INI PROFILE ID DOKTER
             $table->bigInteger('dokter_profile_id')->nullable();
             $table->string('tanggal_konsultasi')->nullable();
-            $table->string('waktu_konsultasi')->nullable();
             $table->text('link_pertemuan')->nullable();
             $table->text('catatan_konsultasi')->nullable();
             $table->text('keluhan_utama')->nullable();

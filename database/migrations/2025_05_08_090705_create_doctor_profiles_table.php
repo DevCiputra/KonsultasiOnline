@@ -18,14 +18,12 @@ class CreateDoctorProfilesTable extends Migration
             $table->bigInteger('category_polyclinic_id')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->string('spesialis_name')->nullable();
-            $table->text('latar_pendidikan')->nullable();
-            $table->text('no_lisensi')->nullable();
-            $table->text('pengalaman')->nullable();
+            $table->text('no_str')->nullable();
             $table->text('biografi')->nullable();
             $table->text('link_accuity')->nullable();
-            $table->text('jadwal_praktek')->nullable();
             $table->text('cv_dokter')->nullable();
             $table->bigInteger('payment_konsultasi')->nullable();
+            $table->integer('payment_strike')->nullable();
             $table->enum('konsultasi', ['OPEN', 'CLOSE'])->default('CLOSE');
             $table->enum('reservasi', ['OPEN', 'CLOSE'])->default('CLOSE');
             $table->enum('status_dokter', ['AKTIF', 'SIBUK'])->default('SIBUK');

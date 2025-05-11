@@ -11,6 +11,8 @@ Data Internal
             <h3>Data Internal</h3>
         </div>
         <div class="card-body table-responsive">
+            @include('alert.success')
+            @include('alert.failed')
             <br>
             <form method="GET" action="{{route('user.index')}}">
                 <div class="row">

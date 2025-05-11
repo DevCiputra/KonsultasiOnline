@@ -15,7 +15,6 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|exists:users,id',
-            'alamat' => 'sometimes|string',
             'gender' => 'sometimes',
             'golongan_darah' => 'sometimes',
             'riwayat_medis' => 'sometimes|string',
@@ -33,7 +32,6 @@ class ProfileController extends Controller
 
         $profile = Profile::create([
             'user_id' => $request->user_id,
-            'alamat' => $request->alamat,
             'gender' => $request->gender,
             'golongan_darah' => $request->golongan_darah,
             'riwayat_medis' => $request->riwayat_medis,
@@ -127,7 +125,7 @@ class ProfileController extends Controller
         $profile = Profile::findOrFail($id);
         $data = $request->all();
 
-        $profile->delete($data);
+        $profile->delete();
         return ResponseFormmater::success(
             $profile,
             'Data Profile Berhasil di delete'
