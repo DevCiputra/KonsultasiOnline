@@ -60,12 +60,12 @@ Edit User
                   <div class="form-group">
                     <label for="role">Role</label>
                     <select name="role" id="role" class="form-control {{$errors->first('role') ?  'is-invalid' : ''}}">
-                        <option value="admin" @if ($user->role == 'admin') selected @endif>Admin</option>
-                        <option value="user" @if ($user->role == 'user') selected @endif>User</option>
-                        <option value="kurir" @if ($user->role == 'kurir') selected @endif>Kurir</option>
+                        @foreach($role as $roles)
+                        <option value="{{ $roles->role_user }}" @if ($user->role == $roles->role_user) selected @endif>{{ $roles->role_user }}</option>
+                        @endforeach
                     </select>
                     <span class="error invalid-feedback">{{$errors->first('role')}}</span>
-                  </div>
+                 </div>
 
 
                 </div>

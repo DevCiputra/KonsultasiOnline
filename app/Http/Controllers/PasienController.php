@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Profile;
+use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PasienController extends Controller
 {
@@ -12,9 +16,21 @@ class PasienController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $filterKeyword = $request->get('keyword');
+        $pasien['pasien'] = Profile::with(['users'])->paginate(10);
+
+        if($filterKeyword)
+        {
+            $pasien['pasien'] = Profile::with(['users'])
+            ->whereHas('users', function($query) use ($filterKeyword) {
+            $query->where('email', 'LIKE', "%$filterKeyword%");
+            })
+            ->paginate(10);
+        }
+
+        return view('pasien.index', $pasien);
     }
 
     /**
@@ -46,7 +62,15 @@ class PasienController extends Controller
      */
     public function show($id)
     {
-        //
+        $profile = Profile::with('users')->findOrFail($id);
+        $reservations = Reservation::where('profile_id', $id)
+                                    ->with(['profilesPasiens.users', 'dokterProfiles.users'])
+                                    ->get();
+
+        return view('pasien.show', [
+            'profile' => $profile,
+            'reservations' => $reservations
+        ]);
     }
 
     /**
@@ -57,7 +81,9 @@ class PasienController extends Controller
      */
     public function edit($id)
     {
-        //
+        $users = User::all();
+        $pasien = Profile::with(['users'])->findOrFail($id);
+        return view('pasien.edit', compact('users', 'pasien'));
     }
 
     /**
@@ -69,7 +95,49 @@ class PasienController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $pasien = Profile::findOrFail($id);
+
+        $validator = Validator::make($request->all(), [
+            'gender' => 'sometimes|string|max:20',
+            'golongan_darah' => 'sometimes|string|max:255',
+            'riwayat_medis' => 'sometimes|string|max:255',
+            'alergi' => 'sometimes|string|max:255',
+
+        ]);
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $input = $request->all();
+
+        $pasien->update($input);
+        return redirect()->route('pasien.index')->with('status', 'Data Pasien Berhasil di update');
+    }
+
+    public function updateReservation(Request $request, $id)
+    {
+       // Validasi input
+        $validator = Validator::make($request->all(), [
+            'tanggal_konsultasi' => 'required|string|max:255',
+            'status_approve' => 'required|in:MENUNGGU,TERIMA,TOLAK',
+            'link_pertemuan' => 'nullable|url',
+            'catatan_konsultasi' => 'nullable|string',
+        ]);
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Cari reservasi berdasarkan ID
+        $reservation = Reservation::findOrFail($id);
+
+        // Update data reservasi
+        $input = $request->all();
+        $reservation->update($input);
+
+        // Redirect kembali ke halaman detail dengan pesan sukses
+        return redirect()->route('pasien.show', $reservation->profile_id)->with('status', 'Reservasi berhasil diperbarui');
     }
 
     /**
@@ -80,6 +148,8 @@ class PasienController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $pasien = Profile::findOrFail($id);
+        $pasien->delete();
+        return redirect()->back()->with('status', 'Data Pasien Berhasil didelete');
     }
 }

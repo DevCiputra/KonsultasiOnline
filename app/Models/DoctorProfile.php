@@ -24,7 +24,10 @@ class DoctorProfile extends Model
         'link_accuity',
         'cv_dokter',
         'payment_konsultasi',
-        'payment_strike'
+        'payment_strike',
+        'konsultasi',
+        'reservasi',
+        'status_dokter',
     ];
 
     public function category_polyclinics()
@@ -71,5 +74,10 @@ class DoctorProfile extends Model
     public function getUpdatedAtAttribute($value)
     {
         return Carbon::parse($value)->setTimezone('UTC')->setTimezone('Asia/Makassar')->format('Y-m-d H:i');
+    }
+
+    public function getCvDokterAttribute($value)
+    {
+        return env('ASSET_URL'). "/uploads/".$value;
     }
 }

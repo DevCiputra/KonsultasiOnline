@@ -100,6 +100,9 @@ class DoctorProfileController extends Controller
             'cv_dokter' => 'sometimes|file|mimes:pdf|max:2048',
             'payment_konsultasi' => 'required|integer',
             'payment_strike' => 'sometimes|integer',
+            'konsultasi' => 'sometimes',
+            'reservasi' => 'sometimes',
+            'status_dokter' => 'sometimes',
         ]);
 
 
@@ -111,38 +114,20 @@ class DoctorProfileController extends Controller
             );
         }
 
-        // Initialize CV dokter path
-        $cvDokterUpload = null;
+        $input = $request->all();
 
-        // Process the PDF file if it exists
-        if($request->hasFile('cv_dokter')) {
-            if($request->file('cv_dokter')->isValid()) {
-                $cvDokter = $request->file('cv_dokter');
-                $extensions = $cvDokter->getClientOriginalExtension();
-                $cvDokterUpload = "cvDokter/".date('YmdHis').".".$extensions;
-                $cvDokterPath = env('UPLOAD_PATH'). "/cvDokter";
-
-                // Create directory if it doesn't exist
-                if (!file_exists($cvDokterPath)) {
-                    mkdir($cvDokterPath, 0755, true);
-                }
-
-                $request->file('cv_dokter')->move($cvDokterPath, $cvDokterUpload);
-            }
+        if($request->file('cv_dokter')->isValid())
+        {
+            $cvDokter = $request->file('cv_dokter');
+            $extensions = $cvDokter->getClientOriginalExtension();
+            $cvDokterUpload = "cvDokter/".date('YmdHis').".".$extensions;
+            $cvDokterPath = env('UPLOAD_PATH'). "/cvDokter";
+            $request->file('cv_dokter')->move($cvDokterPath, $cvDokterUpload);
+            $input['cv_dokter'] = $cvDokterUpload;
         }
 
 
-        $DokterProfile = DoctorProfile::create([
-            'category_polyclinic_id' => $request->category_polyclinic_id,
-            'user_id' => $request->user_id,
-            'spesialis_name' => $request->spesialis_name,
-            'no_str' => $request->no_str,
-            'biografi' => $request->biografi,
-            'link_accuity' => $request->link_accuity,
-            'cv_dokter' => $cvDokterUpload,
-            'payment_konsultasi' => $request->payment_konsultasi,
-            'payment_strike' => $request->payment_strike,
-        ]);
+        $DokterProfile = DoctorProfile::create($input);
 
 
         try {

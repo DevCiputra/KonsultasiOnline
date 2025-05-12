@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\CategoryPolyclinicController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DokterController;
+use App\Http\Controllers\PasienController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Models\CategoryPolyclinic;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -31,10 +32,16 @@ Auth::routes();
 
 
 
-Route::group(['middleware' => ['auth', 'admin']], function() {
+Route::group(['middleware' => ['auth', 'Admin']], function() {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::resource('category', CategoryController::class);
     Route::resource('user', UserController::class);
     Route::resource('categoryPoly', CategoryPolyclinicController::class);
     Route::resource('role', RoleController::class);
+    Route::resource('pasien', PasienController::class);
+    Route::resource('dokter', DokterController::class);
+
+    // Reservasi
+    Route::put('/pasien/reservation/{id}', [App\Http\Controllers\PasienController::class, 'updateReservation'])
+    ->name('pasien.updateReservation');
 });

@@ -26,11 +26,11 @@ Data Internal
 
                     <div class="col-3">
                         <select name="role" id="role" class="form-control">
-                            <option value="admin" @if (Request::get('role') == 'admin') selected @endif>Admin</option>
-                            <option value="pasien" @if (Request::get('role') == 'pasien') selected @endif>Pasien</option>
-                            <option value="dokter" @if (Request::get('role') == 'dokter') selected @endif>Dokter</option>
-                            <option value="hbd" @if (Request::get('role') == 'hbd') selected @endif>HBD</option>
-                            <option value="plp" @if (Request::get('role') == 'plp') selected @endif>PLP</option>
+                            <option value="admin" @if (Request::get('role') == 'Admin') selected @endif>Admin</option>
+                            <option value="pasien" @if (Request::get('role') == 'Pasien') selected @endif>Pasien</option>
+                            <option value="dokter" @if (Request::get('role') == 'Dokter') selected @endif>Dokter</option>
+                            <option value="hbd" @if (Request::get('role') == 'Hbd') selected @endif>HBD</option>
+                            <option value="plp" @if (Request::get('role') == 'Plp') selected @endif>PLP</option>
                         </select>
                     </div>
 
@@ -69,7 +69,6 @@ Data Internal
                                 {{method_field('DELETE')}}
                                 <input type="submit" class="btn btn-danger btn-sm" value="Delete">
                             </form>
-                            <a href="{{route('user.show', [$row->id])}}", class="btn btn-primary btn-sm">Detail Profile</a>
                         </td>
                     </tr>
                     @endforeach

@@ -37,6 +37,19 @@ class ReservationController extends Controller
 
         $reservationCode = $request->reservation_code ?? $this->generateReservationCode($request->dokter_profile_id);
 
+        // Parse tanggal konsultasi ke format yang bisa disimpan di database
+        $dateParts = explode(" ", $request->tanggal_konsultasi);
+        $dateKonsultasi = null;
+
+        // Coba parse tanggal konsultasi ke format Carbon
+        try {
+            // Asumsi format tanggal konsultasi adalah 'DD MMM YYYY HH:mm' atau sejenisnya
+            $dateKonsultasi = Carbon::parse($request->tanggal_konsultasi);
+        } catch (Exception $e) {
+            // Jika gagal parsing, gunakan waktu sekarang
+            $dateKonsultasi = Carbon::now();
+        }
+
         $Reservation = Reservation::create([
             'profile_id' => $request->profile_id,
             'dokter_profile_id' => $request->dokter_profile_id,
@@ -44,7 +57,7 @@ class ReservationController extends Controller
             'link_pertemuan' => $request->link_pertemuan,
             'catatan_konsultasi' => $request->catatan_konsultasi,
             'keluhan_utama' => $request->keluhan_utama,
-            'date_konsultasi_log' => $request->date_konsultasi_log,
+            'date_konsultasi_log' => $dateKonsultasi,
             'status_approve' => $request->status_approve,
             'reservation_code' => $reservationCode,
         ]);
@@ -83,6 +96,8 @@ class ReservationController extends Controller
         $id = $request->input('id');
         $limit = $request->input('limit', 10);
         $status_approve = $request->input('status_approve');
+        $profile_pasien = $request->input('profile_id');
+        $reservation_code = $request->input('reservation_code');
 
 
         if($id)
@@ -111,6 +126,11 @@ class ReservationController extends Controller
         if($status_approve)
         {
             $Reservation->where('status_approve', 'like', '%' . $status_approve . '%');
+        }
+
+        if($profile_pasien)
+        {
+            $Reservation->where('profile_id', $profile_pasien);
         }
 
 

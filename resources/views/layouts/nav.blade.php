@@ -31,41 +31,60 @@
           </li>
         </ul>
 
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-user-injured nav-icon"></i>
-              <p>Pasien</p>
-            </a>
-          </li>
-        </ul>
-
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-user-md nav-icon"></i>
-              <p>Dokter</p>
-            </a>
-          </li>
-        </ul>
-
-        <ul class="nav nav-treeview">
+        <li class="nav-item menu-open">
+        <a href="#" class="nav-link active">
+          <i class="fas fa-notes-medical"></i>
+          <p>
+            Informasi Pasien
+          </p>
+        </a>
+            <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{route('category.index')}}" class="nav-link">
-                <i class="fas fa-sitemap nav-icon"></i>
-                <p>Kategori Product</p>
-              </a>
+                <a href="{{route('pasien.index')}}" class="nav-link">
+                <i class="fas fa-user-injured nav-icon"></i>
+                <p>Pasien</p>
+                </a>
             </li>
-        </ul>
+            </ul>
+        </li>
 
-        <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="{{route('categoryPoly.index')}}" class="nav-link">
-                <i class="fas fa-sitemap nav-icon"></i>
-                <p>Kategori Polyclinic</p>
-              </a>
-            </li>
-        </ul>
+        <li class="nav-item menu-open">
+        <a href="#" class="nav-link active">
+          <i class="fas fa-hospital-user"></i>
+          <p>
+            Informasi Dokter
+          </p>
+        </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{{route('dokter.index')}}" class="nav-link">
+                    <i class="fas fa-user-md nav-icon"></i>
+                    <p>Dokter</p>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                <a href="{{route('category.index')}}" class="nav-link">
+                    <i class="fas fa-sitemap nav-icon"></i>
+                    <p>Kategori Product</p>
+                </a>
+                </li>
+            </ul>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                <a href="{{route('categoryPoly.index')}}" class="nav-link">
+                    <i class="fas fa-sitemap nav-icon"></i>
+                    <p>Kategori Polyclinic</p>
+                </a>
+                </li>
+            </ul>
+        </li>
+
+
+
 
         <li class="nav-item menu-open">
         <a href="#" class="nav-link active">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -67,7 +68,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return view('user.show');
+
     }
 
     /**
@@ -78,6 +79,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
+        $data['role'] = Role::all();
         $data['user'] = User::findOrFail($id);
         return view('user.edit', $data);
     }
