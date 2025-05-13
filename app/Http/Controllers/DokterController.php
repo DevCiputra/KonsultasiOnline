@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryPolyclinic;
 use App\Models\DoctorProfile;
 use App\Models\JadwalPraktek;
+use App\Models\PengalamanPraktek;
 use App\Models\RiwayatPendidikan;
 use App\Models\TindakanMedis;
 use App\Models\User;
@@ -227,32 +228,45 @@ class DokterController extends Controller
         ->with('status', 'Tindakan Medis Dokter berhasil ditambahkan');
     }
 
-    public function deleteJadwal(Request $request,$id , $jadwal_id)
+    public function deleteJadwal(Request $request,$id)
     {
-        $deleteJadwal = JadwalPraktek::findOrFail($id, $jadwal_id);
-        $deleteJadwal->delete();
-        return redirect()->back()->with('status', 'Jadwal Praktek Doctor Berhasil didelete');
-        return redirect()->route('dokter.show', $id)
-        ->with('status', 'Jadwal Dokter Berhasil di hapus');
+        $jadwal = JadwalPraktek::findOrFail($id);
+        $dokter_id = $jadwal->dokter_profile_id; // Simpan ID dokter sebelum menghapus jadwal
+        $jadwal->delete();
+
+        return redirect()->route('dokter.show', $dokter_id)
+            ->with('status', 'Jadwal Praktek Dokter Berhasil dihapus');
     }
 
-    // public function deletePendidikan(Request $request,$id)
-    // {
-    //     $deletePendidikan = RiwayatPendidikan::findOrFail($id);
-    //     $deletePendidikan->delete();
-    //     return redirect()->back()->with('status', 'Riwayat pendidikan Berhasil didelete');
-    //     return redirect()->route('dokter.show', $id)
-    //     ->with('status', 'Riwayat Pendidikan Berhasil di hapus');
-    // }
+    public function deletePendidikan($id)
+    {
+        $pendidikan = RiwayatPendidikan::findOrFail($id);
+        $dokter_id = $pendidikan->dokter_profile_id;
+        $pendidikan->delete();
+        return redirect()->back()->with('status', 'Riwayat pendidikan Berhasil didelete');
+        return redirect()->route('dokter.show', $dokter_id)
+        ->with('status', 'Riwayat Pendidikan Berhasil di hapus');
+    }
 
-    // public function deleteTindakanMedis(Request $request,$id)
-    // {
-    //     $deleteTindakanMedis = TindakanMedis::findOrFail($id);
-    //     $deleteTindakanMedis->delete();
-    //     return redirect()->back()->with('status', 'Tindakan Medis Berhasil didelete');
-    //     return redirect()->route('dokter.show', $id)
-    //     ->with('status', 'Tindakan Medis Berhasil di hapus');
-    // }
+    public function deletePengalaman(Request $request,$id)
+    {
+        $pengalaman = PengalamanPraktek::findOrFail($id);
+        $dokter_id = $pengalaman->dokter_profile_id;
+        $pengalaman->delete();
+        return redirect()->back()->with('status', 'Pengalaman Dokter Berhasil didelete');
+        return redirect()->route('dokter.show', $dokter_id)
+        ->with('status', 'Pengalaman Dokter Berhasil di hapus');
+    }
+
+    public function deleteMedis($id)
+    {
+        $medis = TindakanMedis::findOrFail($id);
+        $dokter_id = $medis->dokter_profile_id;
+        $medis->delete();
+        return redirect()->back()->with('status', 'Tindakan Medis Dokter Berhasil didelete');
+        return redirect()->route('dokter.show', $dokter_id)
+        ->with('status', 'Tindakan Medis Dokter Berhasil didelete');
+    }
 
 
     /**

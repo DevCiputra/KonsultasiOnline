@@ -50,12 +50,16 @@ Route::group(['middleware' => ['auth', 'Admin']], function() {
     Route::post('/dokter/{id}/pengalaman', [App\Http\Controllers\DokterController::class, 'pengalamanDokter'])->name('dokter.pengalamanDokter');
     Route::post('/dokter/{id}/tindakan', [App\Http\Controllers\DokterController::class, 'tindakanMedis'])->name('dokter.tindakanMedis');
 
-    // Delete Jadwal
-    Route::delete('/dokter/{id}/jadwal/{jadwal_id}', [App\Http\Controllers\DokterController::class, 'deleteJadwal'])->name('dokter.deleteJadwal');
+    // Delete Jadwal Dokter
+    Route::delete('/dokter/jadwal/{id}', [App\Http\Controllers\DokterController::class, 'deleteJadwal'])->name('dokter.deleteJadwal');
 
-    // Delete Pendidikan
-    Route::delete('/dokter/{id}/deletePendidikan', [App\Http\Controllers\DokterController::class, 'deletePendidikan'])->name('dokter.deletePendidikan');
+    // Delete Pendidikan Dokter
+    Route::delete('/dokter/pendidikan/{id}', [App\Http\Controllers\DokterController::class, 'deletePendidikan'])->name('dokter.deletePendidikan');
+
+
+    // Delete Pengalaman Dokter
+    Route::delete('/dokter/pengalaman/{id}', [App\Http\Controllers\DokterController::class, 'deletePengalaman'])->name('dokter.deletePengalaman');
 
     // Delete Tindakan Medis
-    Route::delete('/dokter/{id}/deleteTindakanMedis', [App\Http\Controllers\DokterController::class, 'deleteTindakanMedis'])->name('dokter.deleteTindakanMedis');
+    Route::delete('/dokter/medis/{id}', [App\Http\Controllers\DokterController::class, 'deleteMedis'])->name('dokter.deleteMedis');
 });

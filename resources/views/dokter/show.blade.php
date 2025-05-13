@@ -328,7 +328,7 @@
                             </td>
                             <td>{{ $jadwal->jadwal_jam }}</td>
                             <td>
-                                <form action="{{ route('dokter.deleteJadwal', ['id' => $dokter->id, 'jadwal_id' => $jadwal->id]) }}" method="POST" class="d-inline">
+                                <form action="{{ route('dokter.deleteJadwal', $jadwal->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
@@ -342,23 +342,13 @@
                 </table>
             </div>
         @else
-            <div class="card border-0 bg-light">
-                <div class="card-body text-center py-5">
-                    <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
-                    <p class="text-muted mt-3">Belum ada jadwal praktek yang ditambahkan</p>
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#jadwalDokterModal{{ $dokter->id }}">
-                        <i class="bi bi-plus-circle"></i> Tambah Jadwal Sekarang
-                    </button>
-                </div>
-            </div>
         @endif
     </div>
 
-    {{-- Pendidikan Dokter --}}
-
-    {{-- <div class="mt-5">
+    {{-- Pendidikan Dokter section --}}
+    <div class="mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="h5 fw-bold mb-0">Pendidikan Dokter</h2>
+            <h2 class="h5 fw-bold mb-0">Riwayat Pendidikan Dokter</h2>
         </div>
 
         @if($dokter->pendidikans->count() > 0)
@@ -367,22 +357,22 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Pendidikan</th>
+                            <th scope="col">Pendidikan Dokter</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($dokter->pendidikans as $index => $pendidikan)
+                        @foreach($dokter->pendidikans as $index => $pendidikanss)
                         <tr>
                             <th scope="row">{{ $index + 1 }}</th>
                             <td>
-                                <span class="fw-medium">{{ $pendidikan->nama_riwayat_pendidikan }}</span>
+                                <span class="fw-medium">{{ $pendidikanss->nama_riwayat_pendidikan }}</span>
                             </td>
                             <td>
-                                <form action="{{route('dokter.deletePendidikan', ['id' => $dokter->id, 'pendidikan_id' => $pendidikan->id])}}" method="POST" class="d-inline">
+                                <form action="{{ route('dokter.deletePendidikan', $pendidikanss->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus Pendidikan ini?')">
                                         <i class="bi bi-trash">Delete</i>
                                     </button>
                                 </form>
@@ -393,70 +383,11 @@
                 </table>
             </div>
         @else
-            <div class="card border-0 bg-light">
-                <div class="card-body text-center py-5">
-                    <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
-                    <p class="text-muted mt-3">Belum ada jadwal praktek yang ditambahkan</p>
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#jadwalDokterModal{{ $dokter->id }}">
-                        <i class="bi bi-plus-circle"></i> Tambah Jadwal Sekarang
-                    </button>
-                </div>
-            </div>
-        @endif
-    </div> --}}
-
-    {{-- Pengalaman Tindakan Medis --}}
-    <div class="mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="h5 fw-bold mb-0">Tindakan Medis Dokter</h2>
-        </div>
-
-        @if($dokter->medis->count() > 0)
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Tindakan Medis</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($dokter->medis as $index => $medic)
-                        <tr>
-                            <th scope="row">{{ $index + 1 }}</th>
-                            <td>
-                                <span class="fw-medium">{{ $medic->nama_tindakan_medis }}</span>
-                            </td>
-                            <td>
-                                {{-- <form action="{{ route('dokter.deleteTindakanMedis', ['id' => $dokter->id, 'medis_id' => $medic->id]) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
-                                        <i class="bi bi-trash">Delete</i>
-                                    </button>
-                                </form> --}}
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <div class="card border-0 bg-light">
-                <div class="card-body text-center py-5">
-                    <i class="bi bi-calendar-x text-secondary" style="font-size: 2.5rem;"></i>
-                    <p class="text-muted mt-3">Belum ada jadwal praktek yang ditambahkan</p>
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#jadwalDokterModal{{ $dokter->id }}">
-                        <i class="bi bi-plus-circle"></i> Tambah Jadwal Sekarang
-                    </button>
-                </div>
-            </div>
         @endif
     </div>
 
-    {{-- Pengalaman Dokter --}}
 
+    {{-- Pengalaman Kerja Dokter --}}
     <div class="mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h5 fw-bold mb-0">Pengalaman Dokter</h2>
@@ -468,31 +399,74 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Pengalaman Praktek</th>
+                            <th scope="col">Pengalaman Praktek Dokter</th>
                             <th scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($dokter->pengalamans as $index => $pengalaman)
+                        @foreach($dokter->pengalamans as $index => $pengalamanss)
                         <tr>
                             <th scope="row">{{ $index + 1 }}</th>
                             <td>
-                                <span class="fw-medium">{{ $pengalaman->nama_pengalaman_praktek }}</span>
+                                <span class="fw-medium">{{ $pengalamanss->nama_pengalaman_praktek }}</span>
                             </td>
                             <td>
-                                {{-- <form action="{{ route('dokter.deleteJadwal', ['id' => $dokter->id, 'jadwal_id' => $jadwal->id]) }}" method="POST" class="d-inline">
+                                <form action="{{ route('dokter.deletePengalaman', $pengalamanss->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
-                                        <i class="bi bi-trash"></i>
+                                        <i class="bi bi-trash">Delete</i>
                                     </button>
-                                </form> --}}
+                                </form>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+        @else
+        @endif
+    </div>
+
+
+    {{-- Tindakan Medis Dokter --}}
+    <div class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 fw-bold mb-0">Tindakan Medis Dokter</h2>
+        </div>
+
+        @if($dokter->medis->count() > 0)
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Tindakan Medis Dokter</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($dokter->medis as $index => $medic)
+                        <tr>
+                            <th scope="row">{{ $index + 1 }}</th>
+                            <td>
+                                <span class="fw-medium">{{ $medic->nama_tindakan_medis}}</span>
+                            </td>
+                            <td>
+                                <form action="{{ route('dokter.deleteMedis', $medic->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?')">
+                                        <i class="bi bi-trash">Delete</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @else
         @endif
     </div>
 
