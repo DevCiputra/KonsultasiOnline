@@ -18,6 +18,7 @@ class CreateProfilesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->enum('gender', ['Laki-laki', 'Perempuan']);
             $table->string('golongan_darah')->nullable();
+            $table->string('tempat_tanggal_lahir')->nullable();
             $table->text('riwayat_medis')->nullable();
             $table->text('alergi')->nullable();
             $table->timestamps();

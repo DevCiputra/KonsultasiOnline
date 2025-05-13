@@ -27,6 +27,13 @@ Edit Kategori
                     <span class="error invalid-feedback">{{$errors->first('category_polyclinic')}}</span>
                 </div>
 
+                 <div class="form-group">
+                    <label for="image_category_poly">Photo Kategori Polyclinic</label>
+                    <input type="file" class="form-control {{$errors->first('image_category_poly') ? 'is-invalid' : ''}}"
+                    name="image_category_poly" id="image_category_poly">
+                    <span class="error invalid-feedback">{{$errors->first('image_category_poly')}}</span>
+                  </div>
+
 
                 </div>
                 <div class="card-footer">

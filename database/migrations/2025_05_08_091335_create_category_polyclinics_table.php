@@ -16,6 +16,7 @@ class CreateCategoryPolyclinicsTable extends Migration
         Schema::create('category_polyclinics', function (Blueprint $table) {
             $table->id();
             $table->string('category_polyclinic')->nullable();
+            $table->text('image_category_poly')->nullable();
             $table->timestamps();
         });
     }

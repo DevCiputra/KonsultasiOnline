@@ -18,7 +18,8 @@ class ProfileController extends Controller
             'gender' => 'sometimes',
             'golongan_darah' => 'sometimes',
             'riwayat_medis' => 'sometimes|string',
-            'alergi' => 'sometimes|string'
+            'alergi' => 'sometimes|string',
+            'tempat_tanggal_lahir' => 'sometimes|tempat_tanggal_lahir'
         ]);
 
 
@@ -36,6 +37,7 @@ class ProfileController extends Controller
             'golongan_darah' => $request->golongan_darah,
             'riwayat_medis' => $request->riwayat_medis,
             'alergi' => $request->alergi,
+            'tempat_tanggal_lahir' => $request->tempat_tanggal_lahir,
         ]);
 
 

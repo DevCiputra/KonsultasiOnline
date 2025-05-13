@@ -38,6 +38,7 @@ Kategori
                     <tr>
                         <th>No</th>
                         <th>Nama Polyclinic</th>
+                        <th>Photo Category Polyclinic</th>
                         <th>Action</th>
                     </tr>
             </thead>
@@ -46,6 +47,7 @@ Kategori
                     <tr>
                         <td>{{ $loop->iteration + ($categoryPoly->perPage() * ($categoryPoly->currentPage() - 1) ) }}</td>
                         <td>{{$row->category_polyclinic}}</td>
+                        <td><img src="{{$row->image_category_poly}}" alt="photo" width="40px;" height="40px;"></td>
                         <td>
                             <a href="{{ route ('categoryPoly.edit', [$row->id])}}" class="btn btn-warning btn-sm">Edit</a>
                             <form action="{{ route('categoryPoly.destroy', [$row->id]) }}" class="d-inline" method="POST" onsubmit="return confirm('Delete This Item ?')">

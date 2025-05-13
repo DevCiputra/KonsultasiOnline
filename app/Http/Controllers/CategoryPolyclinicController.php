@@ -47,7 +47,8 @@ class CategoryPolyclinicController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category_polyclinic' => 'required|string|max:255'
+            'category_polyclinic' => 'required|string|max:255',
+            'image_category_poly' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if($validator->fails()) {
@@ -58,6 +59,17 @@ class CategoryPolyclinicController extends Controller
 
         if($cek->first()) {
             return redirect()->back()->with('failed', 'Kategori Jasa Ini Sudah pernah anda buat');
+        }
+
+        $input = $request->all();
+
+        if($request->file('image_category_poly')->isValid()) {
+            $photoCategoryPoly = $request->file('image_category_poly');
+            $extensions = $photoCategoryPoly->getClientOriginalExtension();
+            $categoryPolyUpload = "polyclinic/".date('YmdHis').".".$extensions;
+            $categoryPolyPath = \env('UPLOAD_PATH'). "/polyclinic";
+            $request->file('image_category_poly')->move($categoryPolyPath, $categoryPolyUpload);
+            $input['image_category_poly'] = $categoryPolyUpload;
         }
 
         $input['category_polyclinic'] = strtoupper($request->category_polyclinic);
@@ -101,6 +113,7 @@ class CategoryPolyclinicController extends Controller
 
         $validator = Validator::make($request->all(), [
             'category_polyclinic' => 'sometimes|string|max:255',
+            'image_category_poly' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
 
@@ -109,6 +122,17 @@ class CategoryPolyclinicController extends Controller
         }
 
         $input = $request->all();
+
+        if($request->hasFile('image_category_poly')) {
+            if($request->file('image_category_poly')->isValid()) {
+            $photoCategoryPoly = $request->file('image_category_poly');
+            $extensions = $photoCategoryPoly->getClientOriginalExtension();
+            $categoryPolyUpload = "polyclinic/".date('YmdHis').".".$extensions;
+            $categoryPolyPath = \env('UPLOAD_PATH'). "/polyclinic";
+            $request->file('image_category_poly')->move($categoryPolyPath, $categoryPolyUpload);
+            $input['image_category_poly'] = $categoryPolyUpload;
+            }
+        }
 
         $categoryPoly->update($input);
         return redirect()->route('categoryPoly.index')->with('status', 'Category Polyclinic Berhasil di update');

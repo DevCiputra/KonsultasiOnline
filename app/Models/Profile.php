@@ -21,7 +21,8 @@ class Profile extends Model
         'gender',
         'golongan_darah',
         'riwayat_medis',
-        'alergi'
+        'alergi',
+        'tempat_tanggal_lahir'
     ];
 
 

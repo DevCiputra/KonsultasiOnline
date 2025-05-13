@@ -17,6 +17,7 @@ class CategoryPolyclinic extends Model
      */
     protected $fillable = [
         'category_polyclinic',
+        'image_category_poly',
     ];
 
     public function getCreatedAtAttribute($value)
@@ -27,5 +28,10 @@ class CategoryPolyclinic extends Model
     public function getUpdatedAtAttribute($value)
     {
         return Carbon::parse($value)->setTimezone('UTC')->setTimezone('Asia/Makassar')->format('Y-m-d H:i');
+    }
+
+    public function getImageCategoryPolyAttribute($value)
+    {
+        return env('ASSET_URL'). "/uploads/".$value;
     }
 }
