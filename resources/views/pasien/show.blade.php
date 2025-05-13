@@ -117,25 +117,43 @@ Detail Pasien - {{ $profile->users->name }}
                     <!-- Pencarian dan Tampilkan Semua -->
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-primary text-white">
-                                        <i class="fas fa-search"></i>
-                                    </span>
+                            <form method="GET" action="{{ route('pasien.show', $profile->id) }}" class="mb-0">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-primary text-white">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" name="keyword" id="filterKeyword" class="form-control"
+                                        placeholder="Cari kode reservasi..." value="{{ Request::get('keyword') }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-search"></i> Cari
+                                        </button>
+                                        @if(Request::get('keyword'))
+                                            <a href="{{ route('pasien.show', $profile->id) }}" class="btn btn-outline-secondary">
+                                                <i class="fas fa-times"></i> Reset
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
-                                <input type="text" id="searchReservationCode" class="form-control" placeholder="Cari kode reservasi...">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="clearSearch">
-                                        <i class="fas fa-times"></i> Hapus
-                                    </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 text-center mb-4">
+                            @if(Request::get('keyword'))
+                                <div class="alert alert-info mt-2 mb-0 p-2">
+                                    <small>
+                                        <i class="fas fa-info-circle"></i>
+                                        @if(count($reservations) > 0)
+                                            Menampilkan {{ count($reservations) }} hasil untuk pencarian "{{ Request::get('keyword') }}"
+                                        @else
+                                            Tidak ditemukan reservasi dengan kode "{{ Request::get('keyword') }}"
+                                        @endif
+                                    </small>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-right">
-                            <button class="btn btn-outline-primary" id="toggleAllReservations">
-                                <i class="fas fa-eye mr-1"></i> Tampilkan Semua Reservasi
-                            </button>
-                        </div>
+                            @endif
                     </div>
 
                     <!-- Area Hasil Pencarian (Bagian baru) -->
@@ -534,230 +552,4 @@ Detail Pasien - {{ $profile->users->name }}
         display: none;
     }
 </style>
-@endpush
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Elemen-elemen penting
-    const searchInput = document.getElementById('searchReservationCode');
-    const clearSearchBtn = document.getElementById('clearSearch');
-    const toggleTableBtn = document.getElementById('toggleAllReservations');
-    const searchResultArea = document.getElementById('searchResultArea');
-    const searchResultContent = document.getElementById('searchResultContent');
-    const searchResultTitle = document.getElementById('searchResultTitle');
-    const allReservationsTable = document.getElementById('allReservationsTable');
-    const reservationCards = document.querySelectorAll('.reservation-card');
-    const backToResultsBtn = document.createElement('button');
-
-    // Siapkan tombol "Kembali ke Hasil Pencarian"
-    backToResultsBtn.className = 'btn btn-primary back-to-results';
-    backToResultsBtn.innerHTML = '<i class="fas fa-arrow-up mr-1"></i> Kembali ke Hasil Pencarian';
-    document.body.appendChild(backToResultsBtn);
-
-    backToResultsBtn.addEventListener('click', function() {
-        searchResultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-
-    // Toggle tampilkan/sembunyikan tabel reservasi
-    toggleTableBtn.addEventListener('click', function() {
-        if (allReservationsTable.style.display === 'none' || allReservationsTable.style.display === '') {
-            allReservationsTable.style.display = 'block';
-            this.innerHTML = '<i class="fas fa-eye-slash mr-1"></i> Sembunyikan Tabel Reservasi';
-        } else {
-            allReservationsTable.style.display = 'none';
-            this.innerHTML = '<i class="fas fa-eye mr-1"></i> Tampilkan Semua Reservasi';
-        }
-    });
-
-    // Fungsi pencarian dengan hasil di atas
-    searchInput.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase().trim();
-
-        // Reset tampilan
-        searchResultContent.innerHTML = '';
-
-        // Jika pencarian kosong, sembunyikan area hasil pencarian
-        if (searchTerm === '') {
-            searchResultArea.style.display = 'none';
-            backToResultsBtn.style.display = 'none';
-
-            // Tampilkan semua kartu reservasi
-            reservationCards.forEach(card => {
-                card.style.display = '';
-
-                // Reset highlight
-                const codeElement = card.querySelector('.reservation_code');
-                codeElement.innerHTML = codeElement.textContent;
-            });
-
-            return;
-        }
-
-        // Mencari reservasi yang cocok
-        let matchedResults = [];
-
-        reservationCards.forEach(card => {
-            const codeElement = card.querySelector('.reservation_code');
-            const code = codeElement.textContent.toLowerCase();
-            const cardIndex = card.getAttribute('data-index');
-
-            if (code.includes(searchTerm)) {
-                // Simpan info kartu yang cocok
-                matchedResults.push({
-                    code: codeElement.textContent,
-                    element: card,
-                    index: cardIndex
-                });
-
-                // Highlight kode di kartu asli
-                const highlightedText = codeElement.textContent.replace(
-                    new RegExp(searchTerm, 'gi'),
-                    match => `<span class="highlight">${match}</span>`
-                );
-                codeElement.innerHTML = highlightedText;
-
-                // Tampilkan kartu
-                card.style.display = '';
-            } else {
-                // Sembunyikan kartu yang tidak cocok
-                card.style.display = 'none';
-            }
-        });
-
-        // Tampilkan hasil pencarian dalam area khusus
-        if (matchedResults.length > 0) {
-            // Update judul hasil pencarian
-            searchResultTitle.innerHTML = `<i class="fas fa-search mr-2"></i> Hasil Pencarian (${matchedResults.length} reservasi ditemukan)`;
-
-            // Buat kartu hasil pencarian
-            matchedResults.forEach(result => {
-                // Dapatkan informasi dari reservasi
-                const originalCard = result.element;
-                const reservationCode = result.code;
-                const dateElement = originalCard.querySelector('.btn-link');
-                const date = dateElement ? dateElement.textContent.trim() : '';
-                const statusBadge = originalCard.querySelector('.badge').cloneNode(true);
-                const index = result.index;
-
-                // Buat kartu hasil
-                const resultCard = document.createElement('div');
-                resultCard.className = 'search-result-card';
-
-                // Highlight term pencarian di kode reservasi
-                const highlightedCode = reservationCode.replace(
-                    new RegExp(searchTerm, 'gi'),
-                    match => `<span class="highlight">${match}</span>`
-                );
-
-                // Isi HTML kartu hasil
-                resultCard.innerHTML = `
-                    <div class="search-result-header">
-                        <div>
-                            <span class="result-code">${highlightedCode}</span>
-                            <div class="text-muted">${date}</div>
-                        </div>
-                        <div>
-                            ${statusBadge.outerHTML}
-                        </div>
-                    </div>
-                    <div class="search-result-body">
-                        <button class="btn btn-primary btn-sm view-detail" data-index="${index}">
-                            <i class="fas fa-eye mr-1"></i> Lihat Detail
-                        </button>
-                        <button class="btn btn-outline-primary btn-sm edit-reservation" data-id="${originalCard.querySelector('[data-target^="#editModal"]').getAttribute('data-target')}">
-                            <i class="fas fa-edit mr-1"></i> Edit
-                        </button>
-                    </div>
-                `;
-
-                // Tambahkan ke area hasil
-                searchResultContent.appendChild(resultCard);
-            });
-
-            // Tambahkan event listener untuk tombol di hasil pencarian
-            document.querySelectorAll('.view-detail').forEach(button => {
-                button.addEventListener('click', function() {
-                    const index = this.getAttribute('data-index');
-                    const targetCollapse = document.querySelector(`#collapse${index}`);
-
-                    // Buka accordion
-                    $('.collapse').collapse('hide');
-                    $(targetCollapse).collapse('show');
-
-                    // Scroll ke elemen
-                    targetCollapse.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                    // Tampilkan tombol kembali ke hasil
-                    backToResultsBtn.style.display = 'block';
-                });
-            });
-
-            document.querySelectorAll('.edit-reservation').forEach(button => {
-                button.addEventListener('click', function() {
-                    const modalId = this.getAttribute('data-id');
-                    $(modalId).modal('show');
-                });
-            });
-
-            // Tampilkan area hasil pencarian
-            searchResultArea.style.display = 'block';
-
-            // Scroll ke area hasil
-            searchResultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        } else {
-            // Tidak ada hasil
-            searchResultTitle.innerHTML = `<i class="fas fa-search mr-2"></i> Hasil Pencarian`;
-            searchResultContent.innerHTML = `
-                <div class="p-4 text-center">
-                    <div class="text-muted mb-3">
-                        <i class="fas fa-search fa-3x"></i>
-                    </div>
-                    <h5>Tidak ditemukan reservasi dengan kode "${searchTerm}"</h5>
-                    <p>Coba kata kunci lain atau periksa kembali kode reservasi</p>
-                </div>
-            `;
-            searchResultArea.style.display = 'block';
-        }
-    });
-
-    // Clear pencarian
-    clearSearchBtn.addEventListener('click', function() {
-        searchInput.value = '';
-
-        // Trigger event input untuk reset tampilan
-        const inputEvent = new Event('input', { bubbles: true });
-        searchInput.dispatchEvent(inputEvent);
-    });
-
-    // Tombol Lihat Detail di tabel
-    document.querySelectorAll('.show-accordion').forEach(button => {
-        button.addEventListener('click', function() {
-            const targetId = this.getAttribute('data-target');
-            const targetElement = document.querySelector(targetId);
-
-            // Buka accordion
-            $('.collapse').collapse('hide');
-            $(targetId).collapse('show');
-
-            // Scroll ke elemen
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    });
-
-    // Status approve change event untuk link pertemuan
-    document.querySelectorAll('[id^="status_approve"]').forEach(select => {
-        select.addEventListener('change', function() {
-            const id = this.id.replace('status_approve', '');
-            const linkGroup = document.getElementById(`linkPertemuanGroup${id}`);
-
-            if (this.value === 'TERIMA') {
-                linkGroup.style.display = '';
-            } else {
-                linkGroup.style.display = 'none';
-            }
-        });
-    });
-});
-</script>
 @endpush

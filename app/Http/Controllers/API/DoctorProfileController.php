@@ -26,7 +26,7 @@ class DoctorProfileController extends Controller
 
         if($id)
         {
-            $DokterProfile = DoctorProfile::with(['category_polyclinics', 'users'])->find($id);
+            $DokterProfile = DoctorProfile::with(['category_polyclinics', 'users', 'ulasans', 'jadwals', 'pendidikans', 'pengalamans', 'medis'])->find($id);
 
             if($DokterProfile)
             {
@@ -45,7 +45,7 @@ class DoctorProfileController extends Controller
             }
         }
 
-        $DokterProfile = DoctorProfile::with(['category_polyclinics', 'users']);
+        $DokterProfile = DoctorProfile::with(['category_polyclinics', 'users', 'ulasans', 'jadwals', 'pendidikans', 'pengalamans', 'medis']);
 
         if($spesialis_name)
         {

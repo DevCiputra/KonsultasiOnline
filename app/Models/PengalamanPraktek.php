@@ -17,7 +17,7 @@ class PengalamanPraktek extends Model
      */
     protected $fillable = [
         'dokter_profile_id',
-        'nama_pengalaman_prakter',
+        'nama_pengalaman_praktek',
     ];
 
     public function profileDokters()

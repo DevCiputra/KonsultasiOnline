@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryPolyclinic;
 use App\Models\DoctorProfile;
+use App\Models\JadwalPraktek;
+use App\Models\RiwayatPendidikan;
+use App\Models\TindakanMedis;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -77,7 +80,8 @@ class DokterController extends Controller
      */
     public function show($id)
     {
-        //
+        $dokter = DoctorProfile::with('category_polyclinics', 'users', 'jadwals', 'pendidikans', 'pengalamans', 'medis')->findOrFail($id);
+        return view('dokter.show', compact('dokter'));
     }
 
     /**
@@ -158,6 +162,99 @@ class DokterController extends Controller
                         ->with('status', 'Data dokter berhasil diperbarui');
     }
 
+    public function storeJadwal(Request $request, $id)
+    {
+        // Validate input
+        $this->validate($request, [
+        'hari' => 'required|string|',
+        'jadwal_jam' => 'required|string|max:50',
+        'dokter_profile_id' => 'required|exists:doctor_profiles,id'
+        ]);
+        // Create new jadwal
+        $jadwal = new \App\Models\JadwalPraktek();
+        $jadwal->dokter_profile_id = $request->dokter_profile_id;
+        $jadwal->hari = $request->hari;
+        $jadwal->jadwal_jam = $request->jadwal_jam;
+        $jadwal->save();
+        return redirect()->route('dokter.show', $id)
+        ->with('status', 'Jadwal praktek berhasil ditambahkan');
+    }
+
+    public function pendidikanDokter(Request $request , $id)
+    {
+        // Validate input
+        $this->validate($request, [
+        'nama_riwayat_pendidikan' => 'required|string|',
+        'dokter_profile_id' => 'required|exists:doctor_profiles,id'
+        ]);
+        // Create new jadwal
+        $pendidikan = new \App\Models\RiwayatPendidikan();
+        $pendidikan->dokter_profile_id = $request->dokter_profile_id;
+        $pendidikan->nama_riwayat_pendidikan = $request->nama_riwayat_pendidikan;
+        $pendidikan->save();
+        return redirect()->route('dokter.show', $id)
+        ->with('status', 'Pendidikan Dokter berhasil ditambahkan');
+    }
+
+    public function pengalamanDokter(Request $request , $id)
+    {
+        // Validate input
+        $this->validate($request, [
+        'nama_pengalaman_praktek' => 'required|string|',
+        'dokter_profile_id' => 'required|exists:doctor_profiles,id'
+        ]);
+        // Create new jadwal
+        $pengalaman = new \App\Models\PengalamanPraktek();
+        $pengalaman->dokter_profile_id = $request->dokter_profile_id;
+        $pengalaman->nama_pengalaman_praktek = $request->nama_pengalaman_praktek;
+        $pengalaman->save();
+        return redirect()->route('dokter.show', $id)
+        ->with('status', 'Pengalaman Dokter berhasil ditambahkan');
+    }
+
+    public function tindakanMedis(Request $request , $id)
+    {
+        $this->validate($request, [
+        'nama_tindakan_medis' => 'required|string|',
+        'dokter_profile_id' => 'required|exists:doctor_profiles,id'
+        ]);
+        // Create new jadwal
+        $tindakan = new \App\Models\TindakanMedis();
+        $tindakan->dokter_profile_id = $request->dokter_profile_id;
+        $tindakan->nama_tindakan_medis = $request->nama_tindakan_medis;
+        $tindakan->save();
+        return redirect()->route('dokter.show', $id)
+        ->with('status', 'Tindakan Medis Dokter berhasil ditambahkan');
+    }
+
+    public function deleteJadwal(Request $request,$id , $jadwal_id)
+    {
+        $deleteJadwal = JadwalPraktek::findOrFail($id, $jadwal_id);
+        $deleteJadwal->delete();
+        return redirect()->back()->with('status', 'Jadwal Praktek Doctor Berhasil didelete');
+        return redirect()->route('dokter.show', $id)
+        ->with('status', 'Jadwal Dokter Berhasil di hapus');
+    }
+
+    // public function deletePendidikan(Request $request,$id)
+    // {
+    //     $deletePendidikan = RiwayatPendidikan::findOrFail($id);
+    //     $deletePendidikan->delete();
+    //     return redirect()->back()->with('status', 'Riwayat pendidikan Berhasil didelete');
+    //     return redirect()->route('dokter.show', $id)
+    //     ->with('status', 'Riwayat Pendidikan Berhasil di hapus');
+    // }
+
+    // public function deleteTindakanMedis(Request $request,$id)
+    // {
+    //     $deleteTindakanMedis = TindakanMedis::findOrFail($id);
+    //     $deleteTindakanMedis->delete();
+    //     return redirect()->back()->with('status', 'Tindakan Medis Berhasil didelete');
+    //     return redirect()->route('dokter.show', $id)
+    //     ->with('status', 'Tindakan Medis Berhasil di hapus');
+    // }
+
+
     /**
      * Remove the specified resource from storage.
      *
@@ -166,6 +263,8 @@ class DokterController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $dokter = DoctorProfile::findOrFail($id);
+        $dokter->delete();
+        return redirect()->back()->with('status', 'Doctor Berhasil didelete');
     }
 }

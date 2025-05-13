@@ -44,4 +44,18 @@ Route::group(['middleware' => ['auth', 'Admin']], function() {
     // Reservasi
     Route::put('/pasien/reservation/{id}', [App\Http\Controllers\PasienController::class, 'updateReservation'])
     ->name('pasien.updateReservation');
+
+    Route::post('/dokter/{id}/jadwal', [App\Http\Controllers\DokterController::class, 'storeJadwal'])->name('dokter.storeJadwal');
+    Route::post('/dokter/{id}/pendidikan', [App\Http\Controllers\DokterController::class, 'pendidikanDokter'])->name('dokter.pendidikanDokter');
+    Route::post('/dokter/{id}/pengalaman', [App\Http\Controllers\DokterController::class, 'pengalamanDokter'])->name('dokter.pengalamanDokter');
+    Route::post('/dokter/{id}/tindakan', [App\Http\Controllers\DokterController::class, 'tindakanMedis'])->name('dokter.tindakanMedis');
+
+    // Delete Jadwal
+    Route::delete('/dokter/{id}/jadwal/{jadwal_id}', [App\Http\Controllers\DokterController::class, 'deleteJadwal'])->name('dokter.deleteJadwal');
+
+    // Delete Pendidikan
+    Route::delete('/dokter/{id}/deletePendidikan', [App\Http\Controllers\DokterController::class, 'deletePendidikan'])->name('dokter.deletePendidikan');
+
+    // Delete Tindakan Medis
+    Route::delete('/dokter/{id}/deleteTindakanMedis', [App\Http\Controllers\DokterController::class, 'deleteTindakanMedis'])->name('dokter.deleteTindakanMedis');
 });

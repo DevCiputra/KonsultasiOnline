@@ -40,11 +40,6 @@ class DoctorProfile extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function ulasans()
-    {
-        return $this->hasMany(Ulasan::class, 'dokter_profile_id', 'id');
-    }
-
     public function jadwals()
     {
         return $this->hasMany(JadwalPraktek::class , 'dokter_profile_id', 'id');
@@ -63,6 +58,11 @@ class DoctorProfile extends Model
     public function medis()
     {
         return $this->hasMany(TindakanMedis::class, 'dokter_profile_id', 'id');
+    }
+
+    public function ulasans()
+    {
+        return $this->hasMany(Ulasan::class, 'dokter_profile_id', 'id');
     }
 
 

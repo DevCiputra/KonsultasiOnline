@@ -42,7 +42,7 @@
             <li class="nav-item">
                 <a href="{{route('pasien.index')}}" class="nav-link">
                 <i class="fas fa-user-injured nav-icon"></i>
-                <p>Pasien</p>
+                <p>Data Pasien</p>
                 </a>
             </li>
             </ul>

@@ -60,16 +60,29 @@ class PasienController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request ,$id)
     {
         $profile = Profile::with('users')->findOrFail($id);
-        $reservations = Reservation::where('profile_id', $id)
-                                    ->with(['profilesPasiens.users', 'dokterProfiles.users'])
-                                    ->get();
+
+        // Ambil keyword pencarian
+        $filterKeyword = $request->get('keyword');
+
+        // Buat query dasar
+        $query = Reservation::where('profile_id', $id)
+                            ->with(['profilesPasiens.users', 'dokterProfiles.users']);
+
+        // Jika ada keyword, filter berdasarkan reservation_code
+        if($filterKeyword) {
+            $query->where('reservation_code', 'like', '%' . $filterKeyword . '%');
+        }
+
+        // Eksekusi query
+        $reservations = $query->get();
 
         return view('pasien.show', [
             'profile' => $profile,
-            'reservations' => $reservations
+            'reservations' => $reservations,
+            'keyword' => $filterKeyword // Kirim keyword ke view untuk digunakan di form
         ]);
     }
 

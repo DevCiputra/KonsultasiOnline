@@ -16,7 +16,7 @@ class CreatePengalamanPrakteksTable extends Migration
         Schema::create('pengalaman_prakteks', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('dokter_profile_id')->nullable();
-            $table->string('nama_pengalaman_prakter')->nullable();
+            $table->string('nama_pengalaman_praktek')->nullable();
             $table->timestamps();
         });
     }
