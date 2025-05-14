@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CategoryPolyclinicController;
 use App\Http\Controllers\API\CategoryProductController;
 use App\Http\Controllers\API\DoctorProfileController;
 use App\Http\Controllers\API\ProfileController;
@@ -53,6 +54,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     // Category Product
     Route::get('v1/category', [CategoryProductController::class, 'category']);
+    Route::get('v1/categoryPoly', [CategoryPolyclinicController::class, 'getCategoryPolyclinic']);
 
 });
 

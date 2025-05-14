@@ -40,7 +40,7 @@ class CategoryPolyclinicController extends Controller
         }
 
         return ResponseFormmater::success(
-            $categoryPoly->get(),
+            $categoryPoly->paginate(10),
             'Data List Category Polyclinic Berhasil diambil'
         );
     }

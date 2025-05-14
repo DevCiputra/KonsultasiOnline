@@ -23,7 +23,7 @@ class UserController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'name'     => 'required|string|max:255',
-                'email'    => 'required|string|email|max:255|unique:users',
+                'email'    => 'required|unique:users',
                 'password' => 'required|string|min:6|confirmed',
                 'whatsaap' => 'sometimes|string|max:20',
                 'address' => 'sometimes|string',
@@ -36,6 +36,8 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return ResponseFormmater::error(null, $validator->errors()->first(), 400);
             }
+
+
 
             // simpan data user
             $user = User::create([
