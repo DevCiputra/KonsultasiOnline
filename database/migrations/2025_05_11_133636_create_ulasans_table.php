@@ -15,7 +15,8 @@ class CreateUlasansTable extends Migration
     {
         Schema::create('ulasans', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('dokter_profile_id')->nullable();
+            // User Dokter
+            $table->bigInteger('user_id')->nullable();
             $table->text('ulasan_pasien')->nullable();
             $table->string('nama_pasien')->nullable();
             $table->integer('rating')->nullable();

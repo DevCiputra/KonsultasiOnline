@@ -6,6 +6,7 @@ use App\Http\Controllers\API\DoctorProfileController;
 use App\Http\Controllers\API\ProfileController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\TransactionController;
+use App\Http\Controllers\API\UlasanController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,10 @@ Route::middleware('auth:sanctum')->group(function() {
     // Category Product
     Route::get('v1/category', [CategoryProductController::class, 'category']);
     Route::get('v1/categoryPoly', [CategoryPolyclinicController::class, 'getCategoryPolyclinic']);
+
+    // Ulasan
+    Route::post('v1/ulasan', [UlasanController::class, 'PostUlasan']);
+    Route::get('v1/ulasan', [UlasanController::class, 'FetchUlasan']);
 
 });
 
