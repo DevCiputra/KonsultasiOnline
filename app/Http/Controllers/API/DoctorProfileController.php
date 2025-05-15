@@ -22,6 +22,7 @@ class DoctorProfileController extends Controller
         $konsultasi = $request->input('konsultasi');
         $reservasi = $request->input('reservasi');
         $status_dokter = $request->input('status_dokter');
+        $user_name = $request->input('user_name'); // Menambahkan parameter untuk nama user
 
 
         if($id)
@@ -78,6 +79,14 @@ class DoctorProfileController extends Controller
         if($status_dokter)
         {
             $DokterProfile->where('status_dokter', 'like', '%' . $status_dokter . '%');
+        }
+
+        // Menambahkan filter berdasarkan nama user jika parameter user_name diberikan
+        if($user_name)
+        {
+            $DokterProfile->whereHas('users', function($query) use ($user_name) {
+                $query->where('name', 'like', '%' . $user_name . '%');
+            });
         }
 
 
