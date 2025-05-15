@@ -153,7 +153,6 @@ class DoctorProfileController extends Controller
             $doctors = DoctorProfile::with(['users', 'category_polyclinics'])
                 ->withCount('ulasans')
                 ->withAvg('ulasans', 'rating')
-                ->where('status_dokter', 'Aktif')
                 ->orderBy('ulasans_count', 'desc')
                 ->orderBy('ulasans_avg_rating', 'desc')
                 ->limit(10)
