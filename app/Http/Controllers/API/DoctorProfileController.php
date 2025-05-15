@@ -175,6 +175,7 @@ class DoctorProfileController extends Controller
                     'avatar' => $doctor->users->avatar ?? '',
                     'spesialis' => $doctor->spesialis_name,
                     'payment_konsultasi' => (int)$doctor->payment_konsultasi,
+                    'payment_strike' => (int)$doctor->payment_strike,
                     'ulasan_count' => $doctor->ulasans_count,
                     'average_rating' => round($doctor->ulasans_avg_rating, 1) ?? 0,
                     'status_dokter' => $doctor->status_dokter
