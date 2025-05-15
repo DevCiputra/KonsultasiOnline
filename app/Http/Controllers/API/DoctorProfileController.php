@@ -146,4 +146,51 @@ class DoctorProfileController extends Controller
             );
         }
     }
+
+    public function FetchDokterFavorite()
+    {
+        try {
+            $doctors = DoctorProfile::with(['users', 'category_polyclinics'])
+                ->withCount('ulasans')
+                ->withAvg('ulasans', 'rating')
+                ->where('status_dokter', 'Aktif')
+                ->orderBy('ulasans_count', 'desc')
+                ->orderBy('ulasans_avg_rating', 'desc')
+                ->limit(10)
+                ->get();
+
+            if ($doctors->isEmpty()) {
+                return ResponseFormmater::error(
+                    null,
+                    'Data dokter favorit tidak ditemukan',
+                    404
+                );
+            }
+
+            $result = $doctors->map(function ($doctor) {
+                return [
+                    'id' => $doctor->id,
+                    'category_polyclinic' => $doctor->category_polyclinics->category_polyclinic ?? '',
+                    'doctor_name' => $doctor->users->name ?? '',
+                    'avatar' => $doctor->users->avatar ?? '',
+                    'spesialis' => $doctor->spesialis_name,
+                    'payment_konsultasi' => (int)$doctor->payment_konsultasi,
+                    'ulasan_count' => $doctor->ulasans_count,
+                    'average_rating' => round($doctor->ulasans_avg_rating, 1) ?? 0,
+                    'status_dokter' => $doctor->status_dokter
+                ];
+            });
+
+            return ResponseFormmater::success(
+                $result,
+                'Data dokter favorit berhasil diambil'
+            );
+        } catch (\Exception $e) {
+            return ResponseFormmater::error(
+                null,
+                'Error: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
 }

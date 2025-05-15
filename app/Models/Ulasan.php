@@ -16,15 +16,20 @@ class Ulasan extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'user_id',
+        'dokter_profile_id',
         'ulasan_pasien',
         'nama_pasien',
         'rating'
     ];
 
+    public function profileDokters()
+    {
+        return $this->belongsTo(DoctorProfile::class, 'dokter_profile_id', 'id');
+    }
+
     public function userDokters()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->profileDokters->users();
     }
 
     public function getCreatedAtAttribute($value)

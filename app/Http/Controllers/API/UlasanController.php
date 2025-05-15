@@ -14,7 +14,7 @@ class UlasanController extends Controller
     public function PostUlasan (Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
+            'dokter_profile_id' => 'required|exists:doctor_profiles,id',
             'ulasan_pasien' => 'required|string',
             'nama_pasien' => 'required|string|max:255',
             'rating' => 'integer|sometimes',
@@ -30,7 +30,7 @@ class UlasanController extends Controller
         }
 
         $rate = Ulasan::create([
-            'user_id' => $request->user_id,
+            'dokter_profile_id' => $request->dokter_profile_id,
             'ulasan_pasien' => $request->ulasan_pasien,
             'nama_pasien' => $request->nama_pasien,
             'rating' => $request->rating,
@@ -58,12 +58,12 @@ class UlasanController extends Controller
     {
         $id = $request->input('id');
         $limit = $request->input('limit', 10);
-        $user_id = $request->input('user_id');
+        $dokter_profile_id = $request->input('dokter_profile_id');
 
 
         if($id)
         {
-            $ulasan = Ulasan::with(['userDokters'])->find($id);
+            $ulasan = Ulasan::with(['profileDokters.users'])->find($id);
 
             if($ulasan)
             {
@@ -82,11 +82,11 @@ class UlasanController extends Controller
             }
         }
 
-        $ulasan = Ulasan::with(['userDokters']);
+        $ulasan = Ulasan::with(['profileDokters.users']);
 
-        if($user_id)
+        if($dokter_profile_id)
         {
-            $ulasan->where('user_id', $user_id);
+            $ulasan->where('dokter_profile_id', $dokter_profile_id);
         }
 
 

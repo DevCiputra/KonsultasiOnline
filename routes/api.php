@@ -61,6 +61,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('v1/ulasan', [UlasanController::class, 'PostUlasan']);
     Route::get('v1/ulasan', [UlasanController::class, 'FetchUlasan']);
 
+    // Dokter Favorite
+    Route::get('v1/dokterFavorite', [DoctorProfileController::class, 'FetchDokterFavorite']);
+
 });
 
 
