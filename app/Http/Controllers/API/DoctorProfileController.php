@@ -45,7 +45,7 @@ class DoctorProfileController extends Controller
             }
         }
 
-        $DokterProfile = DoctorProfile::with(['category_polyclinics', 'users', 'ulasans', 'jadwals', 'pendidikans', 'pengalamans', 'medis']);
+        $DokterProfile = DoctorProfile::with(['users']);
 
         if($spesialis_name)
         {
