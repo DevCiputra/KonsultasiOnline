@@ -23,7 +23,7 @@ class DoctorProfileController extends Controller
         $reservasi = $request->input('reservasi');
         $status_dokter = $request->input('status_dokter');
         $user_name = $request->input('user_name'); // Menambahkan parameter untuk nama user
-
+        $hari = $request->input('hari'); // Menambahkan parameter untuk filter hari
 
         if($id)
         {
@@ -46,7 +46,19 @@ class DoctorProfileController extends Controller
             }
         }
 
-        $DokterProfile = DoctorProfile::with(['users']);
+        $DokterProfile = DoctorProfile::select([
+            'id',
+            'konsultasi',
+            'link_accuity',
+            'reservasi',
+            'status_dokter',
+            'spesialis_name',
+            'category_polyclinic_id',
+            'user_id'
+            ])->with([
+                'users:id,name,avatar,role',
+                'category_polyclinics:id,category_polyclinic'
+            ]);
 
         if($spesialis_name)
         {
@@ -89,6 +101,22 @@ class DoctorProfileController extends Controller
             });
         }
 
+         // Menambahkan filter berdasarkan hari di tabel jadwals
+        if($hari)
+        {
+            // Jika hari=today, filter dokter yang memiliki jadwal hari ini
+            if($hari == 'hari') {
+                $hariIni = now()->format('l'); // Mengambil nama hari dalam bahasa Inggris (Monday, Tuesday, dll)
+                $DokterProfile->whereHas('jadwals', function($query) use ($hariIni) {
+                    $query->where('hari', $hariIni);
+                });
+            } else {
+                // Jika hari spesifik diberikan, filter berdasarkan hari tersebut
+                $DokterProfile->whereHas('jadwals', function($query) use ($hari) {
+                    $query->where('hari', $hari);
+                });
+            }
+        }
 
         return ResponseFormmater::success(
             $DokterProfile->paginate($limit),
