@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormmater;
 use App\Http\Controllers\Controller;
 use App\Models\DoctorProfile;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -131,15 +132,15 @@ class DoctorProfileController extends Controller
             'category_polyclinic_id' => 'required|exists:category_polyclinics,id',
             'user_id' => 'required|exists:users,id',
             'spesialis_name' => 'required|string',
-            'gender' => 'sometimes|string',
-            'biografi' => 'sometimes|string',
-            'link_accuity' => 'sometimes|string',
-            'cv_dokter' => 'sometimes|file|mimes:pdf|max:2048',
+            'gender' => 'nullable|string',
+            'biografi' => 'nullable|string',
+            'link_accuity' => 'nullable|string',
+            'cv_dokter' => 'nullable|file|mimes:pdf|max:2048',
             'payment_konsultasi' => 'required|integer',
-            'payment_strike' => 'sometimes|integer',
-            'konsultasi' => 'sometimes',
-            'reservasi' => 'sometimes',
-            'status_dokter' => 'sometimes',
+            'payment_strike' => 'nullable|integer',
+            'konsultasi' => 'nullable',
+            'reservasi' => 'nullable',
+            'status_dokter' => 'nullable',
         ]);
 
 
@@ -153,14 +154,17 @@ class DoctorProfileController extends Controller
 
         $input = $request->all();
 
-        if($request->file('cv_dokter')->isValid())
-        {
-            $cvDokter = $request->file('cv_dokter');
-            $extensions = $cvDokter->getClientOriginalExtension();
-            $cvDokterUpload = "cvDokter/".date('YmdHis').".".$extensions;
-            $cvDokterPath = env('UPLOAD_PATH'). "/cvDokter";
-            $request->file('cv_dokter')->move($cvDokterPath, $cvDokterUpload);
-            $input['cv_dokter'] = $cvDokterUpload;
+        // Cek apakah request memiliki file cv_dokter
+        if($request->hasFile('cv_dokter')) {
+            // Kemudian cek validitasnya
+            if($request->file('cv_dokter')->isValid()) {
+                $cvDokter = $request->file('cv_dokter');
+                $extensions = $cvDokter->getClientOriginalExtension();
+                $cvDokterUpload = "cvDokter/".date('YmdHis').".".$extensions;
+                $cvDokterPath = env('UPLOAD_PATH'). "/cvDokter";
+                $request->file('cv_dokter')->move($cvDokterPath, $cvDokterUpload);
+                $input['cv_dokter'] = $cvDokterUpload;
+            }
         }
 
 
@@ -169,16 +173,41 @@ class DoctorProfileController extends Controller
 
         try {
             $DokterProfile->save();
+
+            // Setelah profil dokter disimpan, periksa avatar user
+            $user = User::find($request->user_id);
+
+            // Cek apakah user memiliki avatar yang valid
+            $baseUploadPath = "https://bootcamp.kaspulanwar.com/uploads/";
+
+            if (!$user->avatar || $user->avatar == '' || $user->avatar == $baseUploadPath ||
+                (strpos($user->avatar, $baseUploadPath) === 0 && strlen($user->avatar) <= strlen($baseUploadPath) + 1)) {
+
+                // Tentukan avatar default berdasarkan gender
+                if ($request->gender == 'Pria') {
+                    $user->avatar = 'image/Man.png'; // Avatar dokter pria
+                } else if ($request->gender == 'Perempuan') {
+                    $user->avatar = 'image/Girl.png'; // Avatar dokter perempuan
+                } else {
+                    // Default jika gender tidak ditentukan atau nilai lain
+                    $user->avatar = 'image/DocDefault.png';
+                }
+
+                $user->save();
+            }
+
+            // Dapatkan data lengkap dokter untuk response termasuk user yang terupdate
+            $dokterWithUser = DoctorProfile::with('users')->find($DokterProfile->id);
+
             return ResponseFormmater::success(
-                $DokterProfile,
-                'Data Dokter Profile  Berhasil di tambahkan'
+                $dokterWithUser,
+                'Data Dokter Profile Berhasil di tambahkan'
             );
         }
-
         catch(Exception $error) {
             return ResponseFormmater::error(
                 $error->getMessage(),
-                'Data Dokter profile  tidak ada',
+                'Data Dokter profile tidak ada',
                 404
             );
         }
