@@ -25,9 +25,12 @@ Edit Data Dokter
 
 
                   <div class="form-group">
-                    <label for="no_str">Nomor STR Dokter</label>
-                    <input type="number" class="form-control {{$errors->first('no_str') ? 'is-invalid' : ''}}" name="no_str" id="no_str" placeholder="Enter Nomor Str" value="{{ $dokter->no_str }}">
-                    <span class="error invalid-feedback">{{$errors->first('no_str')}}</span>
+                    <label for="gender">Gender</label>
+                    <select name="gender" id="gender" class="form-control {{$errors->first('gender') ?  'is-invalid' : ''}}">
+                        <option value="Pria" @if ($dokter->gender == 'Pria') selected @endif>Pria</option>
+                        <option value="Perempuan" @if ($dokter->gender == 'Perempuan') selected @endif>Perempuan</option>
+                    </select>
+                    <span class="error invalid-feedback">{{$errors->first('gender')}}</span>
                   </div>
 
 

@@ -100,18 +100,19 @@ class UserController extends Controller
                 return ResponseFormmater::error(null, 'Kode OTP salah atau email tidak ditemukan', 400);
             }
 
-            // Check if OTP has expired (optional - add expiry time check if needed)
-            if (now()->diffInMinutes($verification->created_at) > 10) {
-                return ResponseFormmater::error(null, 'Kode OTP sudah kedaluwarsa', 400);
-            }
+            // Memperpanjang waktu kedaluwarsa OTP dari 10 menit menjadi 30 menit
+            // $otpExpiry = 30; // dalam menit
+
+            // // Check if OTP has expired
+            // if (now()->diffInMinutes($verification->created_at) > $otpExpiry) {
+            //     return ResponseFormmater::error(null, 'Kode OTP sudah kedaluwarsa', 400);
+            // }
 
             // Step 2: Find user with the email
             $user = User::where('email', $request->email)->first();
-
             if (!$user) {
                 return ResponseFormmater::error(null, 'User tidak ditemukan', 404);
             }
-
 
             // Step 4: Delete the OTP after successful password reset
             $verification->delete();

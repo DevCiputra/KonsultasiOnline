@@ -18,7 +18,7 @@ class CreateDoctorProfilesTable extends Migration
             $table->bigInteger('category_polyclinic_id')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->string('spesialis_name')->nullable();
-            $table->text('no_str')->nullable();
+            $table->text('gender')->nullable();
             $table->text('biografi')->nullable();
             $table->text('link_accuity')->nullable();
             $table->text('cv_dokter')->nullable();

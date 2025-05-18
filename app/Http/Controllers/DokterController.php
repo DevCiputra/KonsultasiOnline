@@ -112,7 +112,7 @@ class DokterController extends Controller
         $this->validate($request, [
             'category_polyclinic_id' => 'required|exists:category_polyclinics,id',
             'spesialis_name' => 'required|string|max:255',
-            'no_str' => 'required|numeric',
+            'gender' => 'required|string',
             'biografi' => 'nullable|string',
             'link_accuity' => 'required|url',
             'cv_dokter' => 'nullable|file|mimes:pdf|max:2048', // max 2MB

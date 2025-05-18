@@ -53,7 +53,7 @@
                         </div>
                         <div class="d-flex align-items-center mt-2 text-secondary">
                             <i class="bi bi-file-text me-2"></i>
-                            <span>STR: {{ $dokter->no_str }}</span>
+                            <span>STR: {{ $dokter->gender }}</span>
                         </div>
                     </div>
                 </div>

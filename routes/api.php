@@ -69,3 +69,5 @@ Route::middleware('auth:sanctum')->group(function() {
 
 Route::post('v1/register', [UserController::class , 'Register']);
 Route::post('v1/login', [UserController::class , 'Login']);
+Route::post('v1/requestOTP', [UserController::class, 'requestPasswordResetOtp']);
+Route::post('v1/resetPassword', [UserController::class, 'resetPasswordWithOtp']);

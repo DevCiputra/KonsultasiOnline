@@ -19,7 +19,7 @@ class DoctorProfile extends Model
         'category_polyclinic_id',
         'user_id',
         'spesialis_name',
-        'no_str',
+        'gender',
         'biografi',
         'link_accuity',
         'cv_dokter',

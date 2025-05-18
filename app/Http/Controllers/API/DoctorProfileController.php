@@ -131,7 +131,7 @@ class DoctorProfileController extends Controller
             'category_polyclinic_id' => 'required|exists:category_polyclinics,id',
             'user_id' => 'required|exists:users,id',
             'spesialis_name' => 'required|string',
-            'no_str' => 'sometimes|string',
+            'gender' => 'sometimes|string',
             'biografi' => 'sometimes|string',
             'link_accuity' => 'sometimes|string',
             'cv_dokter' => 'sometimes|file|mimes:pdf|max:2048',
